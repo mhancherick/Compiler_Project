@@ -7,9 +7,9 @@ INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS', 'EOF'
 
 class Token(object):
     def __init__(self, type, value):
-        # token type: INTEGER, PLUS, or EOF
+        # token type: INTEGER, PLUS, MINUS, or EOF
         self.type = type
-        # token value: 0, 1, 2. 3, 4, 5, 6, 7, 8, 9, '+', or None
+        # token value: integer, '+', '-', or None
         self.value = value
 
     def __str__(self):
@@ -57,20 +57,20 @@ class Interpreter(object):
         # get a character at the position self.pos and decide
         # what token to create based on the single character
         current_char = text[self.pos]
+        token_text = ""
 
-        # if the character is a digit then convert it to
-        # integer, create an INTEGER token, increment self.pos
-        # index to point to the next character after the digit,
-        # and return the INTEGER token
+        # if the character is a digit then convert it and subsequent digits to integer token
         if current_char.isdigit():
-            token = Token(INTEGER, int(current_char))
-            self.pos += 1
-            return token
+            value = self.integer()
+            return Token(INTEGER, value)
 
         if current_char == '+':
             token = Token(PLUS, current_char)
             self.pos += 1
             return token
+        elif current_char == "-":
+            token = Token(MINUS, current_char)
+            self.pos += 1
 
         self.error()
 
@@ -110,6 +110,16 @@ class Interpreter(object):
         # effectively interpreting client input
         result = left.value + right.value
         return result
+    
+    def integer(self):
+        """
+        creates an integer token
+        """
+        result = ''
+        while self.pos < len(self.text) and self.text[self.pos].isdigit():
+            result += self.text[self.pos]
+            self.pos += 1
+        return int(result)
 
 
 def main():
