@@ -2,7 +2,7 @@
 #
 # EOF (end-of-file) token is used to indicate that
 # there is no more input left for lexical analysis
-INTEGER, PLUS, EOF = 'INTEGER', 'PLUS', 'EOF'
+INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS', 'EOF'
 
 
 class Token(object):
@@ -86,6 +86,7 @@ class Interpreter(object):
 
     def expr(self):
         """expr -> INTEGER PLUS INTEGER"""
+
         # set current token to the first token taken from the input
         self.current_token = self.get_next_token()
 
