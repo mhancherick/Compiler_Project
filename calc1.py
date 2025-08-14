@@ -46,6 +46,10 @@ class Interpreter(object):
         This method is responsible for breaking a sentence
         apart into tokens. One token at a time.
         """
+
+        #skips white space
+        self.skip_whitespace()
+
         text = self.text
 
         # is self.pos index past the end of the self.text ?
@@ -57,7 +61,6 @@ class Interpreter(object):
         # get a character at the position self.pos and decide
         # what token to create based on the single character
         current_char = text[self.pos]
-        token_text = ""
 
         # if the character is a digit then convert it and subsequent digits to integer token
         if current_char.isdigit():
@@ -71,6 +74,7 @@ class Interpreter(object):
         elif current_char == "-":
             token = Token(MINUS, current_char)
             self.pos += 1
+            return token
 
         self.error()
 
@@ -96,7 +100,7 @@ class Interpreter(object):
 
         # we expect the current token to be a '+' token
         op = self.current_token
-        self.eat(PLUS)
+        self.eat(MINUS)
 
         # we expect the current token to be a single-digit integer
         right = self.current_token
@@ -108,7 +112,7 @@ class Interpreter(object):
         # has been successfully found and the method can just
         # return the result of adding two integers, thus
         # effectively interpreting client input
-        result = left.value + right.value
+        result = left.value - right.value
         return result
     
     def integer(self):
@@ -120,6 +124,13 @@ class Interpreter(object):
             result += self.text[self.pos]
             self.pos += 1
         return int(result)
+    
+    def skip_whitespace(self):
+        """
+        skips whitespace
+        """
+        while self.pos < len(self.text) and self.text[self.pos].isspace():
+            self.pos += 1
 
 
 def main():
